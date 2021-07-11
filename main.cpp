@@ -18,17 +18,14 @@ struct A { };
 
 struct HeapA
 {
-    HeapA() 
-    {
-        pointerToA = new A;
-    }
+    HeapA() {}
 
     ~HeapA()
     {
         delete pointerToA;
     }
 
-    A* pointerToA;
+    A* pointerToA = new A;
 };
 
 
@@ -122,9 +119,9 @@ FLOAT
 */
 struct FloatType
 {
-    FloatType(float f)
+    FloatType(float floatValue)
     {
-        value = new float(f);
+        *value = floatValue;
     }
 
     ~FloatType()
@@ -137,7 +134,7 @@ struct FloatType
     FloatType& multiply(const float rhs);
     FloatType& divide(const float rhs);
 
-    float* value;
+    float* value = new float();
 };
 
 FloatType& FloatType::add(const float rhs)
@@ -176,35 +173,46 @@ DOUBLE
 */
 struct DoubleType
 {
-    double add(double lhs, double rhs);
-    double subtract(double lhs, double rhs);
-    double multiply(double lhs, double rhs);
-    double divide(double lhs, double rhs);
+    DoubleType(double doubleValue)
+    {
+        *value = doubleValue;
+    }
+
+    DoubleType& add(const double rhs);
+    DoubleType& subtract(const double rhs);
+    DoubleType& multiply(const double rhs);
+    DoubleType& divide(const double rhs);
+
+    double* value = new double();
 };
 
-double DoubleType::add(double lhs, double rhs)
+DoubleType& DoubleType::add(const double rhs)
 {
-    return lhs + rhs;
+    *value += rhs;
+    return *this;
 }
 
-double DoubleType::subtract(double lhs, double rhs)
+DoubleType& DoubleType::subtract(const double rhs)
 {
-    return lhs - rhs;
+    *value -= rhs;
+    return *this;
 }
 
-double DoubleType::multiply(double lhs, double rhs)
+DoubleType& DoubleType::multiply(const double rhs)
 {
-    return lhs * rhs;
+    *value *= rhs;
+    return *this;
 }
 
-double DoubleType::divide(double lhs, double rhs)
+DoubleType& DoubleType::divide(const double rhs)
 {
     if (rhs == 0.)
     {
         std::cout << "\nwarning, floating point division by zero returns 'inf' !" << std::endl;
     }
 
-    return lhs / rhs;
+    *value /= rhs;
+    return *this;
 }
 
 
@@ -268,7 +276,7 @@ int main()
 
     //assign heap primitives
     FloatType ft ( 2.0f );
-    // DoubleType dt ( 2 );
+    DoubleType dt ( 2 );
     // IntType it ( 2 ) ;
 
     std::cout << "FloatType add result=" << *ft.add( 2.0f ).value << std::endl;
@@ -276,10 +284,10 @@ int main()
     std::cout << "FloatType multiply result=" << *ft.multiply( 2.0f ).value << std::endl;
     std::cout << "FloatType divide result=" << *ft.divide( 16.0f).value << std::endl << std::endl;
 
-    // std::cout << "DoubleType add result=" << dt.add(2.0).value << std::endl;
-    // std::cout << "DoubleType subtract result=" << dt.subtract(2.0).value << std::endl;
-    // std::cout << "DoubleType multiply result=" << dt.multiply(2.0).value << std::endl;
-    // std::cout << "DoubleType divide result=" << dt.divide(5.f).value << std::endl << std::endl;
+    std::cout << "DoubleType add result=" << *dt.add(2.0).value << std::endl;
+    std::cout << "DoubleType subtract result=" << *dt.subtract(2.0).value << std::endl;
+    std::cout << "DoubleType multiply result=" << *dt.multiply(2.0).value << std::endl;
+    std::cout << "DoubleType divide result=" << *dt.divide(5.).value << std::endl << std::endl;
 
     // std::cout << "IntType add result=" << it.add(2).value << std::endl;
     // std::cout << "IntType subtract result=" << it.subtract(2).value << std::endl;
