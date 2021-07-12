@@ -128,7 +128,7 @@ struct FloatType
 {
     FloatType(float floatValue)
     {
-        *value = floatValue;
+        value = new float (floatValue);
     }
 
     ~FloatType()
@@ -158,7 +158,7 @@ struct FloatType
     FloatType& multiply(const DoubleType& dt);
     FloatType& divide(const DoubleType& dt);
 
-    float* value = new float();
+    float* value;
 };
 
 FloatType& FloatType::add(float rhs)
@@ -199,7 +199,7 @@ struct DoubleType
 {
     DoubleType(double doubleValue)
     {
-        *value = doubleValue;
+        value = new double(doubleValue);
     }
 
     ~DoubleType()
@@ -229,7 +229,7 @@ struct DoubleType
     DoubleType& multiply(const DoubleType& dt);
     DoubleType& divide(const DoubleType& dt);
 
-    double* value = new double();
+    double* value;
 };
 
 DoubleType& DoubleType::add(double rhs)
@@ -270,7 +270,7 @@ struct IntType
 {
     IntType(int intValue)
     {
-        *value = intValue;
+        value = new int(intValue);
     }
 
     ~IntType()
@@ -300,7 +300,7 @@ struct IntType
     IntType& multiply(const DoubleType& dt);
     IntType& divide(const DoubleType& dt);
 
-    int* value = new int();
+    int* value;
 };
 
 IntType& IntType::add(int rhs)
