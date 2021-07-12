@@ -18,10 +18,7 @@ struct A { };
 
 struct HeapA
 {
-    HeapA() 
-    {
-        pointerToA = new A;
-    }
+    HeapA() : pointerToA(new A) { }
 
     ~HeapA()
     {
@@ -126,10 +123,7 @@ FLOAT
 */
 struct FloatType
 {
-    FloatType(float floatValue)
-    {
-        value = new float (floatValue);
-    }
+    FloatType(float floatValue) : value( new float(floatValue) ) { }
 
     ~FloatType()
     {
@@ -197,10 +191,7 @@ DOUBLE
 */
 struct DoubleType
 {
-    DoubleType(double doubleValue)
-    {
-        value = new double(doubleValue);
-    }
+    DoubleType(double doubleValue) : value( new double(doubleValue) ) {}
 
     ~DoubleType()
     {
@@ -268,10 +259,7 @@ INT
 */
 struct IntType
 {
-    IntType(int intValue)
-    {
-        value = new int(intValue);
-    }
+    IntType(int intValue) : value( new int(intValue) ) { }
 
     ~IntType()
     {
