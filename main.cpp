@@ -132,6 +132,9 @@ struct FloatType
     FloatType& multiply(float rhs);
     FloatType& divide(float rhs);
 
+    // 4: conversion to float
+    operator float() { return *value; }
+
     float* value;
 };
 
@@ -184,6 +187,9 @@ struct DoubleType
     DoubleType& multiply(double rhs);
     DoubleType& divide(double rhs);
 
+    // 4: conversion to double
+    operator double() { return *value; }
+
     double* value;
 };
 
@@ -235,6 +241,9 @@ struct IntType
     IntType& subtract(int rhs);
     IntType& multiply(int rhs);
     IntType& divide(int rhs);
+
+    // 4: conversion to int
+    operator int() { return *value; }
 
     int* value;
 };
@@ -322,7 +331,7 @@ int main()
     std::cout << "DoubleType add result=" << *dt.add(2.0).value << std::endl;
     std::cout << "DoubleType subtract result=" << *dt.subtract(2.0).value << std::endl;
     std::cout << "DoubleType multiply result=" << *dt.multiply(2.0).value << std::endl;
-    std::cout << "DoubleType divide result=" << *dt.divide(5.f).value << std::endl << std::endl;
+    std::cout << "DoubleType divide result=" << *dt.divide(5.).value << std::endl << std::endl;
 
     std::cout << "IntType add result=" << *it.add(2).value << std::endl;
     std::cout << "IntType subtract result=" << *it.subtract(2).value << std::endl;
