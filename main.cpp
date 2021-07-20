@@ -61,6 +61,142 @@ struct FloatType;
 struct IntType;
 struct DoubleType;
 
+
+
+struct Point
+{
+    Point(float x_, float y_);
+    Point(const FloatType& x_, const FloatType& y_);
+    Point(const DoubleType& x_, const DoubleType& y_);
+    Point(const IntType& x_, const IntType& y_);
+
+    void toString();
+
+    Point& multiply(float m);
+    Point& multiply(FloatType& m);
+    Point& multiply(DoubleType& m);
+    Point& multiply(IntType& m);
+private:
+    float x{0}, y{0};
+};
+
+/*
+your program should generate the following output EXACTLY.
+This includes the warnings.  
+ The output should have zero warnings.
+
+
+FloatType add result=4
+FloatType subtract result=2
+FloatType multiply result=4
+FloatType divide result=0.25
+
+DoubleType add result=4
+DoubleType subtract result=2
+DoubleType multiply result=4
+DoubleType divide result=0.8
+
+IntType add result=4
+IntType subtract result=2
+IntType multiply result=4
+IntType divide result=1
+
+Chain calculation = 590
+New value of ft = (ft + 3.0f) * 1.5f / 5.0f = 0.975
+---------------------
+
+Initial value of dt: 0.8
+Initial value of it: 590
+Use of function concatenation (mixed type arguments) 
+New value of dt = (dt * it) / 5.0f + ft = 95.375
+---------------------
+
+Intercept division by 0 
+New value of it = it / 0 = error: integer division by zero is an error and will crash the program!
+590
+New value of ft = ft / 0 = warning: floating point division by zero!
+inf
+New value of dt = dt / 0 = warning: floating point division by zero!
+inf
+---------------------
+
+The result of FloatType^4 divided by IntType is: 26.9136
+The result of DoubleType times 3 plus IntType is : 67.3
+The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: 711
+An operation followed by attempts to divide by 0, which are ignored and warns user: 
+error: integer division by zero is an error and will crash the program!
+error: integer division by zero is an error and will crash the program!
+error: integer division by zero is an error and will crash the program!
+505521
+FloatType x IntType  =  13143546
+(IntType + DoubleType + FloatType) x 24 = 315447336
+Power tests with FloatType 
+pow(ft1, floatExp) = 2^2 = 4
+pow(ft1, itExp) = 4^2 = 16
+pow(ft1, ftExp) = 16^2 = 256
+pow(ft1, dtExp) = 256^2 = 65536
+---------------------
+
+Power tests with DoubleType 
+pow(dt1, doubleExp) = 2^2 = 4
+pow(dt1, itExp) = 4^2 = 16
+pow(dt1, ftExp) = 16^2 = 256
+pow(dt1, dtExp) = 256^2 = 65536
+---------------------
+
+Power tests with IntType 
+pow(it1, intExp) = 2^2 = 4
+pow(it1, itExp) = 4^2 = 16
+pow(it1, ftExp) = 16^2 = 256
+pow(it1, dtExp) = 256^2 = 65536
+===============================
+
+Point tests with float argument:
+Point { x: 3, y: 6 }
+Multiplication factor: 6
+Point { x: 18, y: 36 }
+---------------------
+
+Point tests with FloatType argument:
+Point { x: 3, y: 3 }
+Multiplication factor: 3
+Point { x: 9, y: 9 }
+---------------------
+
+Point tests with DoubleType argument:
+Point { x: 3, y: 4 }
+Multiplication factor: 4
+Point { x: 12, y: 16 }
+---------------------
+
+Point tests with IntType argument:
+Point { x: 3, y: 4 }
+Multiplication factor: 5
+Point { x: 15, y: 20 }
+---------------------
+
+good to go!
+
+Use a service like https://www.diffchecker.com/diff to compare your output. 
+*/
+
+struct A { };
+
+struct HeapA
+{
+    HeapA() : pointerToA(new A) { }
+
+    ~HeapA()
+    {
+        delete pointerToA;
+        pointerToA = nullptr;
+    }
+
+    A* pointerToA;
+};
+
+
+
 /*
 FLOAT
 */
@@ -337,26 +473,6 @@ IntType& IntType::pow(int exp)
     return *this;
 }
 
-
-
-struct Point
-{
-    Point(float x_, float y_);
-    Point(const FloatType& x_, const FloatType& y_);
-    Point(const DoubleType& x_, const DoubleType& y_);
-    Point(const IntType& x_, const IntType& y_);
-
-    void toString();
-
-    Point& multiply(float m);
-    Point& multiply(FloatType& m);
-    Point& multiply(DoubleType& m);
-    Point& multiply(IntType& m);
-private:
-    float x{0}, y{0};
-};
-
-
 /*
  Point implementations
 */
@@ -366,7 +482,7 @@ Point::Point(float x_, float y_) :
 }
 
 Point::Point(const FloatType& x_, const FloatType& y_) :
-    Point( static_cast<float>(x_), static_cast<float>(y_) ) 
+    Point( static_cast<float>(x_), static_cast<float>(y_) )
 {
 }
 
@@ -408,6 +524,28 @@ Point& Point::multiply(IntType& m)
     x *= static_cast<float>(m);
     y *= static_cast<float>(m);
     return *this;
+}
+
+
+/*
+ Part 3
+*/
+
+void part3()
+{
+    FloatType ft( 5.5f );
+    DoubleType dt( 11.1 );
+    IntType it ( 34 );
+    DoubleType pi( 3.14 );
+
+    std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
+    std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
+    std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( static_cast<int>(pi) ).multiply( static_cast<int>(dt) ).subtract( static_cast<int>(ft) ) << std::endl;
+    std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
+    std::cout << it.multiply(it).divide(0).divide(0.0f).divide(0.0) << std::endl;
+    
+    std::cout << "FloatType x IntType  =  " << it.multiply( static_cast<int>(ft) ) << std::endl;
+    std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( static_cast<int>(dt) ).add( static_cast<int>(ft) ).multiply( 24 ) << std::endl;
 }
 
 void part4()
@@ -494,144 +632,6 @@ void part4()
     std::cout << "---------------------\n" << std::endl;
 }
 
-
-/*
-your program should generate the following output EXACTLY.
-This includes the warnings.  
- The output should have zero warnings.
-
-
-FloatType add result=4
-FloatType subtract result=2
-FloatType multiply result=4
-FloatType divide result=0.25
-
-DoubleType add result=4
-DoubleType subtract result=2
-DoubleType multiply result=4
-DoubleType divide result=0.8
-
-IntType add result=4
-IntType subtract result=2
-IntType multiply result=4
-IntType divide result=1
-
-Chain calculation = 590
-New value of ft = (ft + 3.0f) * 1.5f / 5.0f = 0.975
----------------------
-
-Initial value of dt: 0.8
-Initial value of it: 590
-Use of function concatenation (mixed type arguments) 
-New value of dt = (dt * it) / 5.0f + ft = 95.375
----------------------
-
-Intercept division by 0 
-New value of it = it / 0 = error: integer division by zero is an error and will crash the program!
-590
-New value of ft = ft / 0 = warning: floating point division by zero!
-inf
-New value of dt = dt / 0 = warning: floating point division by zero!
-inf
----------------------
-
-The result of FloatType^4 divided by IntType is: 26.9136
-The result of DoubleType times 3 plus IntType is : 67.3
-The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: 711
-An operation followed by attempts to divide by 0, which are ignored and warns user: 
-error: integer division by zero is an error and will crash the program!
-error: integer division by zero is an error and will crash the program!
-error: integer division by zero is an error and will crash the program!
-505521
-FloatType x IntType  =  13143546
-(IntType + DoubleType + FloatType) x 24 = 315447336
-Power tests with FloatType 
-pow(ft1, floatExp) = 2^2 = 4
-pow(ft1, itExp) = 4^2 = 16
-pow(ft1, ftExp) = 16^2 = 256
-pow(ft1, dtExp) = 256^2 = 65536
----------------------
-
-Power tests with DoubleType 
-pow(dt1, doubleExp) = 2^2 = 4
-pow(dt1, itExp) = 4^2 = 16
-pow(dt1, ftExp) = 16^2 = 256
-pow(dt1, dtExp) = 256^2 = 65536
----------------------
-
-Power tests with IntType 
-pow(it1, intExp) = 2^2 = 4
-pow(it1, itExp) = 4^2 = 16
-pow(it1, ftExp) = 16^2 = 256
-pow(it1, dtExp) = 256^2 = 65536
-===============================
-
-Point tests with float argument:
-Point { x: 3, y: 6 }
-Multiplication factor: 6
-Point { x: 18, y: 36 }
----------------------
-
-Point tests with FloatType argument:
-Point { x: 3, y: 3 }
-Multiplication factor: 3
-Point { x: 9, y: 9 }
----------------------
-
-Point tests with DoubleType argument:
-Point { x: 3, y: 4 }
-Multiplication factor: 4
-Point { x: 12, y: 16 }
----------------------
-
-Point tests with IntType argument:
-Point { x: 3, y: 4 }
-Multiplication factor: 5
-Point { x: 15, y: 20 }
----------------------
-
-good to go!
-
-Use a service like https://www.diffchecker.com/diff to compare your output. 
-*/
-
-struct A { };
-
-struct HeapA
-{
-    HeapA() : pointerToA(new A) { }
-
-    ~HeapA()
-    {
-        delete pointerToA;
-        pointerToA = nullptr;
-    }
-
-    A* pointerToA;
-};
-
-
-/*
- Part 3
-*/
-
-void part3()
-{
-    FloatType ft( 5.5f );
-    DoubleType dt( 11.1 );
-    IntType it ( 34 );
-    DoubleType pi( 3.14 );
-
-    std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
-    std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
-    std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( static_cast<int>(pi) ).multiply( static_cast<int>(dt) ).subtract( static_cast<int>(ft) ) << std::endl;
-    std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
-    std::cout << it.multiply(it).divide(0).divide(0.0f).divide(0.0) << std::endl;
-    
-    std::cout << "FloatType x IntType  =  " << it.multiply( static_cast<int>(ft) ) << std::endl;
-    std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( static_cast<int>(dt) ).add( static_cast<int>(ft) ).multiply( 24 ) << std::endl;
-}
-
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
@@ -702,5 +702,3 @@ int main()
 
     return 0;
 }
-
-
