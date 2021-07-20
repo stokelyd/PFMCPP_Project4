@@ -53,6 +53,14 @@ Project 4: Part 4 / 9
  You will need to use Forward Declaration and out-of-class definitions to complete this.
  */
 
+#include <iostream>
+#include <cmath>
+
+// Forward declarations for UDT calls
+struct FloatType;
+struct IntType;
+struct DoubleType;
+
 
 
 struct Point
@@ -266,12 +274,7 @@ struct HeapA
     A* pointerToA;
 };
 
-#include <iostream>
 
-// Forward declarations for UDT calls
-struct FloatType;
-struct IntType;
-struct DoubleType;
 
 /*
 FLOAT
@@ -286,18 +289,28 @@ struct FloatType
         value = nullptr;
     }
 
+    operator float() { return *value; }
+
     FloatType& add(float rhs);
     FloatType& subtract(float rhs);
     FloatType& multiply(float rhs);
     FloatType& divide(float rhs);
 
-    // 4: conversion to float
-    operator float() { return *value; }
+    FloatType& pow(const IntType& exp);
+    FloatType& pow(const FloatType& exp);
+    FloatType& pow(const DoubleType& exp);
+    FloatType& pow(float exp);
+
+    
 
 private:
     float* value;
+    const FloatType& powInternal(float exp);
 };
 
+/*
+ basic math implementations
+*/
 FloatType& FloatType::add(float rhs)
 {
     *value += rhs;
@@ -327,6 +340,35 @@ FloatType& FloatType::divide(float rhs)
     return *this;
 }
 
+/*
+ pow() implementations
+*/
+const FloatType& FloatType::powInternal(float exp)
+{
+    *value = std::pow( *value, exp );
+    return *this;
+}
+
+
+FloatType& FloatType::pow(const IntType& exp)
+{
+    // *value = powInternal(exp) );
+}
+
+FloatType& FloatType::pow(const FloatType& exp)
+{
+    // *value = powInternal( static_cast<float>(exp) );
+}
+
+FloatType& FloatType::pow(const DoubleType& exp)
+{
+
+}
+
+FloatType& FloatType::pow(float exp)
+{
+
+}
 
 
 /*
