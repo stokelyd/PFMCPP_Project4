@@ -78,7 +78,6 @@ struct Point
     Point& multiply(IntType& m);
 private:
     float x{0}, y{0};
-    Point& multiplyInternal(float m);
 };
 
 /*
@@ -487,31 +486,26 @@ Point::Point(const IntType& x_, const IntType& y_) :
 
 void Point::toString() { std::cout << "Point { x: " << x << ", y: " << y << " }\n"; }
 
-Point& Point::multiplyInternal(float m)
+Point& Point::multiply(float m)
 {
     x *= m;
     y *= m;
     return *this;
 }
 
-Point& Point::multiply(float m)
-{
-    return multiplyInternal(m);
-}
-
 Point& Point::multiply(FloatType& m)
 {
-    return multiplyInternal(static_cast<float>(m) );
+    return multiply(static_cast<float>(m) );
 }
 
 Point& Point::multiply(DoubleType& m)
 {
-    return multiplyInternal(static_cast<float>(m) );
+    return multiply(static_cast<float>(m) );
 }
 
 Point& Point::multiply(IntType& m)
 {
-    return multiplyInternal(static_cast<float>(m) );
+    return multiply(static_cast<float>(m) );
 }
 
 
