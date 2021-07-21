@@ -225,7 +225,7 @@ struct FloatType
 
 private:
     float* value;
-    const FloatType& powInternal(float exp);
+    FloatType& powInternal(float exp);
 };
 
 FloatType& FloatType::add(float rhs)
@@ -284,7 +284,7 @@ struct DoubleType
 
 private:
     double* value;
-    const DoubleType& powInternal(double exp);
+    DoubleType& powInternal(double exp);
 };
 
 DoubleType& DoubleType::add(double rhs)
@@ -342,7 +342,7 @@ struct IntType
     IntType& pow(int exp);
 private:
     int* value;
-    const IntType& powInternal(int exp);
+    IntType& powInternal(int exp);
 };
 
 IntType& IntType::add(int rhs)
@@ -378,7 +378,7 @@ IntType& IntType::divide(int rhs)
 /*
  Float pow() implementation
 */
-const FloatType& FloatType::powInternal(float exp)
+FloatType& FloatType::powInternal(float exp)
 {
     *value = std::pow( *value, exp );
     return *this;
@@ -386,32 +386,28 @@ const FloatType& FloatType::powInternal(float exp)
 
 FloatType& FloatType::pow(const IntType& exp)
 {
-    powInternal( static_cast<float>(exp) );
-    return *this;
+    return powInternal( static_cast<float>(exp) );
 }
 
 FloatType& FloatType::pow(const FloatType& exp)
 {
-    powInternal( static_cast<float>(exp) );
-    return *this;
+    return powInternal( static_cast<float>(exp) );
 }
 
 FloatType& FloatType::pow(const DoubleType& exp)
 {
-    powInternal( static_cast<float>(exp) );
-    return *this;
+    return powInternal( static_cast<float>(exp) );
 }
 
 FloatType& FloatType::pow(float exp)
 {
-    powInternal(exp);
-    return *this;
+    return powInternal(exp);
 }
 
 /*
  Double pow() implementation
 */
-const DoubleType& DoubleType::powInternal(double exp)
+DoubleType& DoubleType::powInternal(double exp)
 {
     *value = std::pow( *value, exp );
     return *this;
@@ -419,32 +415,28 @@ const DoubleType& DoubleType::powInternal(double exp)
 
 DoubleType& DoubleType::pow(const IntType& exp)
 {
-    powInternal( static_cast<double>(exp) );
-    return *this;
+    return powInternal( static_cast<double>(exp) );
 }
 
 DoubleType& DoubleType::pow(const FloatType& exp)
 {
-    powInternal( static_cast<double>(exp) );
-    return *this;
+    return powInternal( static_cast<double>(exp) );
 }
 
 DoubleType& DoubleType::pow(const DoubleType& exp)
 {
-    powInternal( static_cast<double>(exp) );
-    return *this;
+    return powInternal( static_cast<double>(exp) );
 }
 
 DoubleType& DoubleType::pow(double exp)
 {
-    powInternal( static_cast<double>(exp) );
-    return *this;
+    return powInternal( static_cast<double>(exp) );
 }
 
 /*
  Int pow() implementation
 */
-const IntType& IntType::powInternal(int exp)
+IntType& IntType::powInternal(int exp)
 {
     *value = static_cast<int>( std::pow( *value, exp ) );
     return *this;
@@ -452,26 +444,22 @@ const IntType& IntType::powInternal(int exp)
 
 IntType& IntType::pow(const IntType& exp)
 {
-    powInternal( static_cast<int>(exp) );
-    return *this;
+    return powInternal( static_cast<int>(exp) );
 }
 
 IntType& IntType::pow(const FloatType& exp)
 {
-    powInternal( static_cast<int>(exp) );
-    return *this;
+    return powInternal( static_cast<int>(exp) );
 }
 
 IntType& IntType::pow(const DoubleType& exp)
 {
-    powInternal( static_cast<int>(exp) );
-    return *this;
+    return powInternal( static_cast<int>(exp) );
 }
 
 IntType& IntType::pow(int exp)
 {
-    powInternal( static_cast<int>(exp) );
-    return *this;
+    return powInternal( static_cast<int>(exp) );
 }
 
 /*
@@ -508,26 +496,22 @@ Point& Point::multiplyInternal(float m)
 
 Point& Point::multiply(float m)
 {
-    multiplyInternal(m);
-    return *this;
+    return multiplyInternal(m);
 }
 
 Point& Point::multiply(FloatType& m)
 {
-    multiplyInternal(static_cast<float>(m) );
-    return *this;
+    return multiplyInternal(static_cast<float>(m) );
 }
 
 Point& Point::multiply(DoubleType& m)
 {
-    multiplyInternal(static_cast<float>(m) );
-    return *this;
+    return multiplyInternal(static_cast<float>(m) );
 }
 
 Point& Point::multiply(IntType& m)
 {
-    multiplyInternal(static_cast<float>(m) );
-    return *this;
+    return multiplyInternal(static_cast<float>(m) );
 }
 
 
