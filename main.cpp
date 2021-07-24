@@ -222,6 +222,24 @@ struct FloatType
 {
     explicit FloatType(float floatValue) : value( std::make_unique<float>(floatValue) ) { }
 
+    FloatType& apply( std::function<FloatType&( std::unique_ptr<float>& )> f )
+    {
+        if( f )
+        {
+            return f(value);
+        } 
+        return *this;
+    }
+
+    FloatType& apply( void(*f)(std::unique_ptr<float>&) )
+    {
+        if( f )
+        {
+            f(value);
+        }
+        return *this;
+    } 
+
     operator float() const { return *value; }
 
     FloatType& operator+=(float rhs);
@@ -462,6 +480,15 @@ IntType& IntType::pow(int exp)
 }
 
 /*
+ Free functions
+*/
+void myFloatFreeFunct(std::unique_ptr<float>& floatValue)
+{
+    *floatValue += 7.f;
+}
+
+
+/*
  Point implementations
 */
 Point::Point(float x_, float y_) :
@@ -628,7 +655,7 @@ void part4()
     p3.toString();   
     std::cout << "---------------------\n" << std::endl;
 }
-/*
+
 void part6()
 {
     FloatType ft3(3.0f);
@@ -637,14 +664,18 @@ void part6()
     
     std::cout << "Calling FloatType::apply() using a lambda (adds 7.0f) and FloatType as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
-    ft3.apply( [](){} );
+    ft3.apply( [&ft3](std::unique_ptr<float>& floatValue) -> FloatType&
+        {
+            *floatValue += 7.f;
+            return ft3;
+        } );
     std::cout << "ft3 after: " << ft3 << std::endl;
     std::cout << "Calling FloatType::apply() using a free function (adds 7.0f) and void as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
     ft3.apply(myFloatFreeFunct);
     std::cout << "ft3 after: " << ft3 << std::endl;
     std::cout << "---------------------\n" << std::endl;
-
+    /*
     std::cout << "Calling DoubleType::apply() using a lambda (adds 6.0) and DoubleType as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
     dt3.apply( [](){} );
@@ -664,8 +695,8 @@ void part6()
     it3.apply(myIntFreeFunct);
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;    
-}
 */
+}
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
@@ -683,6 +714,7 @@ void part6()
 
 int main()
 {   
+    /*
     //testing instruction 0
     HeapA heapA; 
 
@@ -755,7 +787,8 @@ int main()
     std::cout << "---------------------\n" << std::endl; 
     part3();
     part4();
-    // part6();
+    */
+    part6();
     std::cout << "good to go!\n";
 
     return 0;
