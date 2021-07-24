@@ -220,13 +220,7 @@ FLOAT
 */
 struct FloatType
 {
-    explicit FloatType(float floatValue) : value( new float(floatValue) ) { }
-
-    ~FloatType()
-    {
-        delete value;
-        value = nullptr;
-    }
+    explicit FloatType(float floatValue) : value( std::make_unique<float>(floatValue) ) { }
 
     operator float() const { return *value; }
 
@@ -241,7 +235,7 @@ struct FloatType
     FloatType& pow(float exp);
 
 private:
-    float* value;
+    std::unique_ptr<float> value;
     FloatType& powInternal(float exp);
 };
 
@@ -279,13 +273,7 @@ DOUBLE
 */
 struct DoubleType
 {
-    explicit DoubleType(double doubleValue) : value( new double(doubleValue) ) {}
-
-    ~DoubleType()
-    {
-        delete value;
-        value = nullptr;
-    }
+    explicit DoubleType(double doubleValue) : value( std::make_unique<double>(doubleValue) ) { }
 
     operator double() const { return *value; }
 
@@ -300,7 +288,7 @@ struct DoubleType
     DoubleType& pow(double exp);
 
 private:
-    double* value;
+    std::unique_ptr<double> value;
     DoubleType& powInternal(double exp);
 };
 
@@ -338,13 +326,7 @@ INT
 */
 struct IntType
 {
-    explicit IntType(int intValue) : value( new int(intValue) ) { }
-
-    ~IntType()
-    {
-        delete value;
-        value = nullptr;
-    }
+    explicit IntType(int intValue) : value( std::make_unique<int>(intValue) ) { }
 
     operator int() const { return *value; }
 
@@ -358,7 +340,7 @@ struct IntType
     IntType& pow(const DoubleType& exp);
     IntType& pow(int exp);
 private:
-    int* value;
+    std::unique_ptr<int> value;
     IntType& powInternal(int exp);
 };
 
