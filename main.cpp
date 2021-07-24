@@ -222,20 +222,21 @@ struct FloatType
 {
     explicit FloatType(float floatValue) : value( std::make_unique<float>(floatValue) ) { }
 
-    FloatType& apply( std::function<FloatType&( std::unique_ptr<float>& )> f )
+    FloatType& apply( std::function<FloatType&( std::unique_ptr<float>& )> func )
     {
-        if( f )
+        if( func )
         {
-            return f(value);
+            return func(value);
         } 
         return *this;
     }
 
-    FloatType& apply( void(*f)(std::unique_ptr<float>&) )
+    using FloatFunctionPointer = void(*)(std::unique_ptr<float>&);
+    FloatType& apply( FloatFunctionPointer functionPtr )
     {
-        if( f )
+        if( functionPtr )
         {
-            f(value);
+            functionPtr(value);
         }
         return *this;
     } 
@@ -293,6 +294,25 @@ struct DoubleType
 {
     explicit DoubleType(double doubleValue) : value( std::make_unique<double>(doubleValue) ) { }
 
+    DoubleType& apply(std::function<DoubleType&( std::unique_ptr<double>& )> func)
+    {
+        if( func )
+        {
+            func(value);
+        }
+        return *this;
+    }
+
+    using DoubleFunctionPointer = void(*)( std::unique_ptr<double>& );
+    DoubleType& apply( DoubleFunctionPointer functionPtr )
+    {
+        if( functionPtr )
+        {
+            functionPtr(value);
+        }
+        return *this;
+    }
+
     operator double() const { return *value; }
 
     DoubleType& operator+=(double rhs);
@@ -345,6 +365,25 @@ INT
 struct IntType
 {
     explicit IntType(int intValue) : value( std::make_unique<int>(intValue) ) { }
+
+    IntType& apply( std::function<IntType&( std::unique_ptr<int>& )> func )
+    {
+        if (func)
+        {
+            func(value);
+        }
+        return *this;
+    }
+
+    using IntFunctionPointer = void(*)(std::unique_ptr<int>&);
+    IntType& apply( IntFunctionPointer functionPtr )
+    {
+        if (functionPtr)
+        {
+            functionPtr(value);
+        }
+        return *this;
+    }
 
     operator int() const { return *value; }
 
@@ -485,6 +524,16 @@ IntType& IntType::pow(int exp)
 void myFloatFreeFunct(std::unique_ptr<float>& floatValue)
 {
     *floatValue += 7.f;
+}
+
+void myDoubleFreeFunct(std::unique_ptr<double>& doubleValue)
+{
+    *doubleValue += 6.0;
+}
+
+void myIntFreeFunct(std::unique_ptr<int>& intValue)
+{
+    *intValue += 5;
 }
 
 
@@ -675,27 +724,34 @@ void part6()
     ft3.apply(myFloatFreeFunct);
     std::cout << "ft3 after: " << ft3 << std::endl;
     std::cout << "---------------------\n" << std::endl;
-    /*
+    
     std::cout << "Calling DoubleType::apply() using a lambda (adds 6.0) and DoubleType as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
-    dt3.apply( [](){} );
+    dt3.apply( [&dt3](std::unique_ptr<double>& doubleValue) -> DoubleType&
+        {
+            *doubleValue += 6.0;
+            return dt3;
+        } );
     std::cout << "dt3 after: " << dt3 << std::endl;
     std::cout << "Calling DoubleType::apply() using a free function (adds 6.0) and void as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
     dt3.apply(myDoubleFreeFunct);
     std::cout << "dt3 after: " << dt3 << std::endl;
     std::cout << "---------------------\n" << std::endl;
-
+    
     std::cout << "Calling IntType::apply() using a lambda (adds 5) and IntType as return type:" << std::endl;
     std::cout << "it3 before: " << it3 << std::endl;
-    it3.apply( [](){} );
+    it3.apply( [&it3](std::unique_ptr<int>& intValue) -> IntType&
+        {
+            *intValue += 5;
+            return it3;
+        } );
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "Calling IntType::apply() using a free function (adds 5) and void as return type:" << std::endl;
     std::cout << "it3 before: " << it3 << std::endl;
     it3.apply(myIntFreeFunct);
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;    
-*/
 }
 
 /*
@@ -714,7 +770,6 @@ void part6()
 
 int main()
 {   
-    /*
     //testing instruction 0
     HeapA heapA; 
 
@@ -787,7 +842,6 @@ int main()
     std::cout << "---------------------\n" << std::endl; 
     part3();
     part4();
-    */
     part6();
     std::cout << "good to go!\n";
 
