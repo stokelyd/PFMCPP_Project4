@@ -366,9 +366,6 @@ struct Point
     void toString();
 
     Point& multiply(float m);
-    Point& multiply(Numeric<float>& m);
-    Point& multiply(Numeric<double>& m);
-    Point& multiply(Numeric<int>& m);
 private:
     float x{0}, y{0};
 };
@@ -412,10 +409,6 @@ Point& Point::multiply(float m)
     y *= m;
     return *this;
 }
-
-Point& Point::multiply(Numeric<float>& m) { return multiply(static_cast<float>(m) ); }
-Point& Point::multiply(Numeric<double>& m) { return multiply(static_cast<float>(m) ); }
-Point& Point::multiply(Numeric<int>& m) { return multiply(static_cast<float>(m) ); }
 
 /*
  Part 3
@@ -523,7 +516,7 @@ void part4()
     Point p2(ft2, static_cast<float>(dt2));
     p2.toString();   
     std::cout << "Multiplication factor: " << dt2 << std::endl;
-    p2.multiply(dt2); 
+    p2.multiply(static_cast<float>(dt2) ); 
     p2.toString();   
     std::cout << "---------------------\n" << std::endl;
 
