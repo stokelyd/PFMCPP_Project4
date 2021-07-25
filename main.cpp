@@ -209,6 +209,9 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <cmath>
 #include <functional>
 #include <memory>
+#include <type_traits>
+#include <limits>
+#include <typeinfo>
 
 
 /*
@@ -259,9 +262,32 @@ struct Numeric
         *value *= rhs;
         return *this;
     }
-
+    
     Numeric& operator/=(Type rhs)
     {
+        if constexpr (std::is_same<int, Type>::value)
+        {
+            // std::cout << "INTEGER TEMPLATE TYPE\n";
+            // if constexpr (std::is_same<int, decltype(rhs)>::value)
+            if constexpr (std::is_same<int, Type>::value)
+            {
+                // std::cout << decltype(rhs) << ", INTEGER PARAMETER TYPE\n";
+                if (rhs == 0)
+                {
+                    std::cout << "error: integer division by zero is an error and will crash the program!\n";
+                    return *this;
+                }
+            }
+            else if (rhs < std::numeric_limits<Type>::epsilon() )
+            {
+                std::cout << "PARAMETER is LESS THAN EPSILON, DON'T DIVIDE\n";
+            }
+        }
+        else if (rhs < std::numeric_limits<Type>::epsilon() )
+        {
+            std::cout << "warning: floating point division by zero!\n";
+        }
+
         *value /= rhs;
         return *this;
     }
@@ -288,24 +314,12 @@ struct Numeric<double>
 
     Numeric(Type _value) : value( std::make_unique<Type>(_value) ) { }
     
-    // Numeric& apply( std::function<Numeric&( std::unique_ptr<Type>& )> func )
-    // {
-    //     if( func )
-    //     {
-    //         return func(value);
-    //     } 
-    //     return *this;
-    // }
-
-    // using NumericFunctionPointer = void(*)(std::unique_ptr<Type>&);
-    // Numeric& apply( NumericFunctionPointer functionPtr )
-    // {
-    //     if( functionPtr )
-    //     {
-    //         functionPtr(value);
-    //     }
-    //     return *this;
-    // } 
+    template<typename Callable>
+    Numeric& apply(Callable&& func)
+    {
+        func(value);
+        return *this;
+    }
 
     operator Type() const { return *value; }
 
@@ -383,7 +397,7 @@ struct HeapA
 template<typename NumericType>
 void myNumericFreeFunct( std::unique_ptr<NumericType>& value )
 {
-    *value += 7.f;
+    *value += static_cast<NumericType>(7.0);
 }
 
 
@@ -427,7 +441,6 @@ void part3()
     it *= static_cast<int>(dt);
     it -= static_cast<int>(ft);
     std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it << std::endl;
-    /*
     std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
     it *= it;
     it /= 0;
@@ -441,7 +454,6 @@ void part3()
     it += static_cast<int>(ft);
     it *= 24;
     std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it << std::endl;
-    */
 }
 
 void part4()
@@ -601,17 +613,22 @@ void part7()
     std::cout << "ft3 before: " << ft3 << std::endl;
     ft3.apply(myNumericFreeFunct).apply(myNumericFreeFunct);
     std::cout << "ft3 after: " << ft3 << std::endl;
-    std::cout << "---------------------\n" << std::endl; /*
+    std::cout << "---------------------\n" << std::endl;
 
     std::cout << "Calling Numeric<double>::apply() using a lambda (adds 6.0) and Numeric<double> as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
 
     {
         using Type = decltype(dt3)::Type;
-        dt3.apply( [&dt3](std::unique_ptr<Type>& value){} ); // This calls the templated apply fcn
+        dt3.apply( [&dt3](std::unique_ptr<Type>& value) -> decltype(dt3)&
+        {
+            *value += 6.0;
+            std::cout << "explicit lambda result: " << dt3 << std::endl;
+            return dt3;
+        } ); // This calls the templated apply fcn
     }
     
-    std::cout << "dt3 after: " << dt3 << std::endl; 
+    std::cout << "dt3 after: " << dt3 << std::endl;
     std::cout << "Calling Numeric<double>::apply() twice using a free function (adds 7.0) and void as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
     dt3.apply(myNumericFreeFunct<double>).apply(myNumericFreeFunct<double>); // This calls the templated apply fcn
@@ -622,8 +639,12 @@ void part7()
     std::cout << "it3 before: " << it3 << std::endl;
 
     {
-        using Type = #4;
-        it3.apply( [](std::unique...){} );
+        using Type = decltype(it3)::Type;
+        it3.apply( [&it3](std::unique_ptr<Type>& value) -> decltype(it3)&
+        {
+            *value +=5;
+            return it3;
+        } );
     }
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "Calling Numeric<int>::apply() twice using a free function (adds 7) and void as return type:" << std::endl;
@@ -631,7 +652,6 @@ void part7()
     it3.apply(myNumericFreeFunct).apply(myNumericFreeFunct);
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;    
-    */
 }
 
 /*
@@ -714,12 +734,10 @@ int main()
     
     // Intercept division by 0
     // --------
-    /*
     std::cout << "Intercept division by 0 " << std::endl;
     std::cout << "New value of it = it / 0 = " << (it /= 0) << std::endl;
     std::cout << "New value of ft = ft / 0 = " << (ft /= 0) << std::endl;
     std::cout << "New value of dt = dt / 0 = " << (dt /= 0) << std::endl;
-    */
     std::cout << "---------------------\n" << std::endl; 
     part3();
     part4();
