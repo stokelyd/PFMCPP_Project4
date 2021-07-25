@@ -283,9 +283,6 @@ private:
 struct Point
 {
     Point(float x_, float y_);
-    // Point(const Numeric<float>& x_, const Numeric<float>& y_);
-    // Point(const Numeric<double>& x_, const Numeric<double>& y_);
-    // Point(const Numeric<int>& x_, const Numeric<int>& y_);
 
     void toString();
 
@@ -315,47 +312,21 @@ struct HeapA
 
 
 //  Free functions
-void myFloatFreeFunct(std::unique_ptr<float>& floatValue)
+template<typename NumericType>
+void myNumericFreeFunct( std::unique_ptr<NumericType>& value )
 {
-    *floatValue += 7.f;
+    *value += 7.f;
 }
 
-void myDoubleFreeFunct(std::unique_ptr<double>& doubleValue)
-{
-    *doubleValue += 6.0;
-}
-
-void myIntFreeFunct(std::unique_ptr<int>& intValue)
-{
-    *intValue += 5;
-}
-
+// void myFloatFreeFunct(std::unique_ptr<float>& floatValue) { *floatValue += 7.f; }
+// void myDoubleFreeFunct(std::unique_ptr<double>& doubleValue) { *doubleValue += 6.0; }
+// void myIntFreeFunct(std::unique_ptr<int>& intValue) { *intValue += 5; }
 
 //  Point implementations
 Point::Point(float x_, float y_) :
     x(x_), y(y_)
 {
 }
-
-// Point::Point(const Numeric<float>& x_, const Numeric<float>& y_) :
-//     Point( static_cast<float>(x_), static_cast<float>(y_) )
-// {
-// }
-
-// Point::Point(const Numeric<float>& x_, const Numeric<float>& y_) :
-//     Point( static_cast<float>(x_), static_cast<float>(y_) )
-// {
-// }
-
-// Point::Point(const Numeric<double>& x_, const Numeric<double>& y_) :
-//     Point( static_cast<float>(x_), static_cast<float>(y_) )
-// {
-// }
-
-// Point::Point(const Numeric<int>& x_, const Numeric<int>& y_) :
-//     Point( static_cast<float>(x_), static_cast<float>(y_) )
-// {
-// }
 
 void Point::toString() { std::cout << "Point { x: " << x << ", y: " << y << " }\n"; }
 
@@ -366,20 +337,9 @@ Point& Point::multiply(float m)
     return *this;
 }
 
-Point& Point::multiply(Numeric<float>& m)
-{
-    return multiply(static_cast<float>(m) );
-}
-
-Point& Point::multiply(Numeric<double>& m)
-{
-    return multiply(static_cast<float>(m) );
-}
-
-Point& Point::multiply(Numeric<int>& m)
-{
-    return multiply(static_cast<float>(m) );
-}
+Point& Point::multiply(Numeric<float>& m) { return multiply(static_cast<float>(m) ); }
+Point& Point::multiply(Numeric<double>& m) { return multiply(static_cast<float>(m) ); }
+Point& Point::multiply(Numeric<int>& m) { return multiply(static_cast<float>(m) ); }
 
 /*
  Part 3
@@ -430,9 +390,9 @@ void part4()
     float floatExp = 2.0f;
     double doubleExp = 2.0;
     int intExp = 2;
-    Numeric<int> itExp(2);
-    Numeric<float> ftExp(2.0f);
-    Numeric<double> dtExp(2.0);
+    Numeric itExp(2);
+    Numeric ftExp(2.0f);
+    Numeric dtExp(2.0);
     
     // Power tests with FloatType
     std::cout << "Power tests with FloatType " << std::endl;
