@@ -339,26 +339,9 @@ struct Numeric<double>
         return *this;
     }
 
-    template<typename divideByType>
-    Numeric& operator/=(divideByType&& rhs)
+    Numeric& operator/=(Type rhs)
     {
-        if constexpr (std::is_same<int, Type>::value)
-        {
-            if constexpr (std::is_same<int, divideByType>::value)
-            {
-                if (rhs == 0)
-                {
-                    std::cout << "error: integer division by zero is an error and will crash the program!\n";
-                    return *this;
-                }
-            }
-            else if (rhs < std::numeric_limits<divideByType>::epsilon() )
-            {
-                std::cout << "can't divide integers by zero!\n";
-                return *this;
-            }
-        }
-        else if (rhs < std::numeric_limits<Type>::epsilon() )
+        if (rhs < std::numeric_limits<Type>::epsilon() )
         {
             std::cout << "warning: floating point division by zero!\n";
         }
