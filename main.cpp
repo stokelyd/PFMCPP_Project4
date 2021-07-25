@@ -210,6 +210,7 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <functional>
 #include <memory>
 
+
 /*
  Templated Numeric Class
 */
@@ -238,6 +239,73 @@ struct Numeric
         }
         return *this;
     } 
+
+    operator Type() const { return *value; }
+
+    Numeric& operator+=(Type rhs)
+    {
+        *value += rhs;
+        return *this;
+    }
+
+    Numeric& operator-=(Type rhs)
+    {
+        *value -= rhs;
+        return *this;
+    }
+
+    Numeric& operator*=(Type rhs)
+    {
+        *value *= rhs;
+        return *this;
+    }
+
+    Numeric& operator/=(Type rhs)
+    {
+        *value /= rhs;
+        return *this;
+    }
+
+    Numeric& pow(const Numeric<float>& exp) { return powInternal( static_cast<Type>(exp) ); }
+    Numeric& pow(const Numeric<int>& exp) { return powInternal( static_cast<Type>(exp) ); }
+    Numeric& pow(const Numeric<double>& exp) { return powInternal( static_cast<Type>(exp) ); }
+    Numeric& pow(Type exp) { return powInternal(exp); }
+
+private:
+    std::unique_ptr<Type> value;
+    Numeric& powInternal(Type exp)
+    {
+        *value = static_cast<Type>( std::pow( *value, exp ) );
+        return *this;
+    }
+};
+
+// explicit template specialization for double
+template<>
+struct Numeric<double>
+{
+    using Type = double;
+
+    Numeric(Type _value) : value( std::make_unique<Type>(_value) ) { }
+    
+    // Numeric& apply( std::function<Numeric&( std::unique_ptr<Type>& )> func )
+    // {
+    //     if( func )
+    //     {
+    //         return func(value);
+    //     } 
+    //     return *this;
+    // }
+
+    // using NumericFunctionPointer = void(*)(std::unique_ptr<Type>&);
+    // Numeric& apply( NumericFunctionPointer functionPtr )
+    // {
+    //     if( functionPtr )
+    //     {
+    //         functionPtr(value);
+    //     }
+    //     return *this;
+    // } 
 
     operator Type() const { return *value; }
 
@@ -318,9 +386,6 @@ void myNumericFreeFunct( std::unique_ptr<NumericType>& value )
     *value += 7.f;
 }
 
-// void myFloatFreeFunct(std::unique_ptr<float>& floatValue) { *floatValue += 7.f; }
-// void myDoubleFreeFunct(std::unique_ptr<double>& doubleValue) { *doubleValue += 6.0; }
-// void myIntFreeFunct(std::unique_ptr<int>& intValue) { *intValue += 5; }
 
 //  Point implementations
 Point::Point(float x_, float y_) :
@@ -512,7 +577,7 @@ void part6()
     std::cout << "---------------------\n" << std::endl;    
 }
 */
-/*
+
 void part7()
 {
     Numeric ft3(3.0f);
@@ -523,8 +588,12 @@ void part7()
     std::cout << "ft3 before: " << ft3 << std::endl;
 
     {
-        using Type = #4;
-        ft3.apply( [](std::unique...){} );
+        using Type = decltype(ft3)::Type;
+        ft3.apply( [&ft3](std::unique_ptr<Type>& value) -> decltype(ft3)&
+        {
+            *value += 7.f;
+            return ft3;
+        } );
     }
 
     std::cout << "ft3 after: " << ft3 << std::endl;
@@ -532,17 +601,17 @@ void part7()
     std::cout << "ft3 before: " << ft3 << std::endl;
     ft3.apply(myNumericFreeFunct).apply(myNumericFreeFunct);
     std::cout << "ft3 after: " << ft3 << std::endl;
-    std::cout << "---------------------\n" << std::endl;
+    std::cout << "---------------------\n" << std::endl; /*
 
     std::cout << "Calling Numeric<double>::apply() using a lambda (adds 6.0) and Numeric<double> as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
 
     {
-        using Type = #4;
-        dt3.apply( [](std::unique...){} ); // This calls the templated apply fcn
+        using Type = decltype(dt3)::Type;
+        dt3.apply( [&dt3](std::unique_ptr<Type>& value){} ); // This calls the templated apply fcn
     }
     
-    std::cout << "dt3 after: " << dt3 << std::endl;
+    std::cout << "dt3 after: " << dt3 << std::endl; 
     std::cout << "Calling Numeric<double>::apply() twice using a free function (adds 7.0) and void as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
     dt3.apply(myNumericFreeFunct<double>).apply(myNumericFreeFunct<double>); // This calls the templated apply fcn
@@ -562,8 +631,8 @@ void part7()
     it3.apply(myNumericFreeFunct).apply(myNumericFreeFunct);
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;    
+    */
 }
-*/
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
@@ -655,7 +724,7 @@ int main()
     part3();
     part4();
     // part6();
-    // part7();
+    part7();
     std::cout << "good to go!\n";
 
     return 0;
