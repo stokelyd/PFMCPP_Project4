@@ -211,7 +211,6 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <memory>
 #include <type_traits>
 #include <limits>
-#include <typeinfo>
 
 
 /*
@@ -262,25 +261,24 @@ struct Numeric
         *value *= rhs;
         return *this;
     }
-    
-    Numeric& operator/=(Type rhs)
+
+    template<typename divideByType>
+    Numeric& operator/=(divideByType&& rhs)
     {
         if constexpr (std::is_same<int, Type>::value)
         {
-            // std::cout << "INTEGER TEMPLATE TYPE\n";
-            // if constexpr (std::is_same<int, decltype(rhs)>::value)
-            if constexpr (std::is_same<int, Type>::value)
+            if constexpr (std::is_same<int, divideByType>::value)
             {
-                // std::cout << decltype(rhs) << ", INTEGER PARAMETER TYPE\n";
                 if (rhs == 0)
                 {
                     std::cout << "error: integer division by zero is an error and will crash the program!\n";
                     return *this;
                 }
             }
-            else if (rhs < std::numeric_limits<Type>::epsilon() )
+            else if (rhs < std::numeric_limits<divideByType>::epsilon() )
             {
-                std::cout << "PARAMETER is LESS THAN EPSILON, DON'T DIVIDE\n";
+                std::cout << "can't divide integers by zero!\n";
+                return *this;
             }
         }
         else if (rhs < std::numeric_limits<Type>::epsilon() )
@@ -341,8 +339,30 @@ struct Numeric<double>
         return *this;
     }
 
-    Numeric& operator/=(Type rhs)
+    template<typename divideByType>
+    Numeric& operator/=(divideByType&& rhs)
     {
+        if constexpr (std::is_same<int, Type>::value)
+        {
+            if constexpr (std::is_same<int, divideByType>::value)
+            {
+                if (rhs == 0)
+                {
+                    std::cout << "error: integer division by zero is an error and will crash the program!\n";
+                    return *this;
+                }
+            }
+            else if (rhs < std::numeric_limits<divideByType>::epsilon() )
+            {
+                std::cout << "can't divide integers by zero!\n";
+                return *this;
+            }
+        }
+        else if (rhs < std::numeric_limits<Type>::epsilon() )
+        {
+            std::cout << "warning: floating point division by zero!\n";
+        }
+
         *value /= rhs;
         return *this;
     }
