@@ -143,7 +143,8 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 template<typename NumericType>
 struct Numeric
 {
-    using Type = NumericType;
+    // using Type = NumericType;
+    using Type = Temporary<NumericType>;
 
     Numeric(Type _value) : value( std::make_unique<Type>(_value) ) { }
     
@@ -173,26 +174,27 @@ struct Numeric
         return *this;
     }
 
-    operator Type() const { return *value; }
+    operator NumericType() const { return *value; }
+    // operator Type&() { return value; }
 
     template<typename OtherType>
     Numeric& operator+=(const OtherType& rhs)
     {
-        *value += static_cast<Type>(rhs);
+        *value += static_cast<NumericType>(rhs);
         return *this;
     }
 
     template<typename OtherType>
     Numeric& operator-=(const OtherType& rhs)
     {
-        *value -= static_cast<Type>(rhs);
+        *value -= static_cast<NumericType>(rhs);
         return *this;
     }
 
     template<typename OtherType>
     Numeric& operator*=(const OtherType& rhs)
     {
-        *value *= static_cast<Type>(rhs);
+        *value *= static_cast<NumericType>(rhs);
         return *this;
     }
 
@@ -224,15 +226,15 @@ struct Numeric
         return *this;
     }
 
-    Numeric& pow(Type exp) { return powInternal(exp); }
+    // Numeric& pow(Type exp) { return powInternal(exp); }
 
 private:
     std::unique_ptr<Type> value;
-    Numeric& powInternal(Type exp)
-    {
-        *value = static_cast<Type>( std::pow( *value, exp ) );
-        return *this;
-    }
+    // Numeric& powInternal(Type exp)
+    // {
+    //     *value = static_cast<Type>( std::pow( *value, exp ) );
+    //     return *this;
+    // }
 };
 
 
@@ -561,7 +563,7 @@ int main()
     
     d *= -1;
     std::cout << "d: " << d << std::endl;
-    
+    /*
     p.multiply(d.pow(f).pow(i));
     std::cout << "d: " << d << std::endl;
     
@@ -615,6 +617,7 @@ int main()
         std::cout << "i cubed: " << i << std::endl;
     }
 
+    */
     /*
     //testing instruction 0
     HeapA heapA; 
