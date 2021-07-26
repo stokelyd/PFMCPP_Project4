@@ -44,8 +44,8 @@ struct Temporary
      revise these conversion functions to read/write to 'v' here
      hint: what qualifier do read-only functions usually have?
      */
-    operator ___() { /* read-only function */ }
-    operator ___() { /* read/write function */ }
+    operator NumericType() const { return v; } /* read-only function */
+    operator NumericType&() { return v;  } /* read/write function */
 private:
     static int counter;
     NumericType v;
@@ -55,26 +55,28 @@ private:
  2) add the definition of Temporary::counter here, which is a static variable and must be defined outside of the class.
     Remember the rules about how to define a Template member variable/function outside of the class.
 */
+template<typename T>
+int Temporary<T>::counter = 0;
 
 /*
  3) You'll need to template your overloaded math operator functions in your Templated Class from Ch5 p04
     use static_cast to convert whatever type is passed in to your template's NumericType before performing the +=, -=, etc.  here's an example implementation:
  */
-namespace example
-{
-template<typename NumericType>
-struct Numeric
-{
-    //snip
-    template<typename OtherType>
-    Numeric& operator-=(const OtherType& o) 
-    { 
-        *value -= static_cast<NumericType>(o); 
-        return *this; 
-    }
-    //snip
-};
-}
+// namespace example
+// {
+// template<typename NumericType>
+// struct Numeric
+// {
+//     //snip
+//     template<typename OtherType>
+//     Numeric& operator-=(const OtherType& o) 
+//     { 
+//         *value -= static_cast<NumericType>(o); 
+//         return *this; 
+//     }
+//     //snip
+// };
+// }
 
 /*
  4) remove your specialized <double> template of your Numeric<T> class from the previous task (ch5 p04)
@@ -145,42 +147,52 @@ struct Numeric
 
     Numeric(Type _value) : value( std::make_unique<Type>(_value) ) { }
     
-    Numeric& apply( std::function<Numeric&( std::unique_ptr<Type>& )> func )
+    // Numeric& apply( std::function<Numeric&( std::unique_ptr<Type>& )> func )
+    // {
+    //     if( func )
+    //     {
+    //         return func(value);
+    //     } 
+    //     return *this;
+    // }
+
+    // using NumericFunctionPointer = void(*)(std::unique_ptr<Type>&);
+    // Numeric& apply( NumericFunctionPointer functionPtr )
+    // {
+    //     if( functionPtr )
+    //     {
+    //         functionPtr(value);
+    //     }
+    //     return *this;
+    // } 
+    
+    template<typename Callable>
+    Numeric& apply(Callable&& func)
     {
-        if( func )
-        {
-            return func(value);
-        } 
+        func(value);
         return *this;
     }
-
-    using NumericFunctionPointer = void(*)(std::unique_ptr<Type>&);
-    Numeric& apply( NumericFunctionPointer functionPtr )
-    {
-        if( functionPtr )
-        {
-            functionPtr(value);
-        }
-        return *this;
-    } 
 
     operator Type() const { return *value; }
 
-    Numeric& operator+=(Type rhs)
+    template<typename OtherType>
+    Numeric& operator+=(const OtherType& rhs)
     {
-        *value += rhs;
+        *value += static_cast<Type>(rhs);
         return *this;
     }
 
-    Numeric& operator-=(Type rhs)
+    template<typename OtherType>
+    Numeric& operator-=(const OtherType& rhs)
     {
-        *value -= rhs;
+        *value -= static_cast<Type>(rhs);
         return *this;
     }
 
-    Numeric& operator*=(Type rhs)
+    template<typename OtherType>
+    Numeric& operator*=(const OtherType& rhs)
     {
-        *value *= rhs;
+        *value *= static_cast<Type>(rhs);
         return *this;
     }
 
@@ -204,63 +216,6 @@ struct Numeric
             }
         }
         else if (std::abs(rhs) <= std::numeric_limits<DivideByType>::epsilon() )
-        {
-            std::cout << "warning: floating point division by zero!\n";
-        }
-
-        *value /= rhs;
-        return *this;
-    }
-
-    Numeric& pow(Type exp) { return powInternal(exp); }
-
-private:
-    std::unique_ptr<Type> value;
-    Numeric& powInternal(Type exp)
-    {
-        *value = static_cast<Type>( std::pow( *value, exp ) );
-        return *this;
-    }
-};
-
-// explicit template specialization for double
-template<>
-struct Numeric<double>
-{
-    using Type = double;
-
-    Numeric(Type _value) : value( std::make_unique<Type>(_value) ) { }
-    
-    template<typename Callable>
-    Numeric& apply(Callable&& func)
-    {
-        func(value);
-        return *this;
-    }
-
-    operator Type() const { return *value; }
-
-    Numeric& operator+=(Type rhs)
-    {
-        *value += rhs;
-        return *this;
-    }
-
-    Numeric& operator-=(Type rhs)
-    {
-        *value -= rhs;
-        return *this;
-    }
-
-    Numeric& operator*=(Type rhs)
-    {
-        *value *= rhs;
-        return *this;
-    }
-
-    Numeric& operator/=(Type rhs)
-    {
-        if (rhs < std::numeric_limits<Type>::epsilon() )
         {
             std::cout << "warning: floating point division by zero!\n";
         }
