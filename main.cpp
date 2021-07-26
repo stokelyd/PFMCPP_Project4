@@ -227,8 +227,9 @@ private:
 
 struct Point
 {
-    Point(float x_, float y_) : 
-        x(x_), y(y_)
+    template<typename T1, typename T2>
+    Point(const T1& x_, const T2& y_) : 
+        x( static_cast<float>(x_) ), y( static_cast<float>(y_) )
     {
     }
 
@@ -314,7 +315,7 @@ void part3()
     it *= 24;
     std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it << std::endl;
 }
-/*
+
 void part4()
 {
     // ------------------------------------------------------------
@@ -326,9 +327,9 @@ void part4()
     float floatExp = 2.0f;
     double doubleExp = 2.0;
     int intExp = 2;
-    Numeric itExp(2);
-    Numeric ftExp(2.0f);
-    Numeric dtExp(2.0);
+    Numeric<int> itExp(2);
+    Numeric<float> ftExp(2.0f);
+    Numeric<double> dtExp(2.0);
     
     // Power tests with FloatType
     std::cout << "Power tests with FloatType " << std::endl;
@@ -345,21 +346,21 @@ void part4()
     std::cout << "pow(dt1, ftExp) = " << dt1 << "^" << ftExp << " = " << dt1.pow( static_cast<double>(ftExp) )  << std::endl;    
     std::cout << "pow(dt1, dtExp) = " << dt1 << "^" << dtExp << " = " << dt1.pow(dtExp)  << std::endl;    
     std::cout << "---------------------\n" << std::endl;    
-
+    /*
     // Power tests with IntType
     std::cout << "Power tests with IntType " << std::endl;
-    std::cout << "pow(it1, intExp) = " << it1 << "^" << intExp << " = " << it1.pow(intExp)  << std::endl;
+    std::cout << "pow(it1, intExp) = " << it1 << "^" << intExp << " = " << it1.pow(intExp)   << std::endl;
     std::cout << "pow(it1, itExp) = " << it1 << "^" << itExp << " = " << it1.pow(itExp)  << std::endl;
     std::cout << "pow(it1, ftExp) = " << it1 << "^" << ftExp << " = " << it1.pow( static_cast<int>(ftExp) )  << std::endl;    
     std::cout << "pow(it1, dtExp) = " << it1 << "^" << dtExp << " = " << it1.pow( static_cast<int>(dtExp) )  << std::endl;    
     std::cout << "===============================\n" << std::endl; 
-
+    */
     // ------------------------------------------------------------
     //                          Point tests
     // ------------------------------------------------------------
-    Numeric ft2(3.0f);
-    Numeric dt2(4.0);
-    Numeric it2(5);
+    Numeric<float> ft2(3.0f);
+    Numeric<double> dt2(4.0);
+    Numeric<int> it2(5);
     float floatMul = 6.0f;
 
     // Point tests with float
@@ -398,7 +399,7 @@ void part4()
     p3.toString();   
     std::cout << "---------------------\n" << std::endl;
 }
-*/
+
 /*
 void part6()
 {
@@ -449,12 +450,12 @@ void part6()
     std::cout << "---------------------\n" << std::endl;    
 }
 */
-/*
+
 void part7()
 {
-    Numeric ft3(3.0f);
-    Numeric dt3(4.0);
-    Numeric it3(5);
+    Numeric<float> ft3(3.0f);
+    Numeric<double> dt3(4.0);
+    Numeric<int> it3(5);
     
     std::cout << "Calling Numeric<float>::apply() using a lambda (adds 7.0f) and Numeric<float> as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
@@ -466,12 +467,13 @@ void part7()
             *value += 7.f;
             return ft3;
         } );
+
+        std::cout << "ft3 after: " << ft3 << std::endl;
+        std::cout << "Calling Numeric<float>::apply() twice using a free function (adds 7.0f) and void as return type:" << std::endl;
+        std::cout << "ft3 before: " << ft3 << std::endl;
+        ft3.apply(myNumericFreeFunct<Type>).apply(myNumericFreeFunct<Type>);
     }
 
-    std::cout << "ft3 after: " << ft3 << std::endl;
-    std::cout << "Calling Numeric<float>::apply() twice using a free function (adds 7.0f) and void as return type:" << std::endl;
-    std::cout << "ft3 before: " << ft3 << std::endl;
-    ft3.apply(myNumericFreeFunct).apply(myNumericFreeFunct);
     std::cout << "ft3 after: " << ft3 << std::endl;
     std::cout << "---------------------\n" << std::endl;
 
@@ -486,14 +488,15 @@ void part7()
             // std::cout << "explicit lambda result: " << dt3 << std::endl;
             return dt3;
         } ); // This calls the templated apply fcn
-    }
+    
+        std::cout << "dt3 after: " << dt3 << std::endl;
+        std::cout << "Calling Numeric<double>::apply() twice using a free function (adds 7.0) and void as return type:" << std::endl;
+        std::cout << "dt3 before: " << dt3 << std::endl;
+        dt3.apply(myNumericFreeFunct<Type>).apply(myNumericFreeFunct<Type>); // This calls the templated apply fcn
+    } 
     
     std::cout << "dt3 after: " << dt3 << std::endl;
-    std::cout << "Calling Numeric<double>::apply() twice using a free function (adds 7.0) and void as return type:" << std::endl;
-    std::cout << "dt3 before: " << dt3 << std::endl;
-    dt3.apply(myNumericFreeFunct<double>).apply(myNumericFreeFunct<double>); // This calls the templated apply fcn
-    std::cout << "dt3 after: " << dt3 << std::endl;
-    std::cout << "---------------------\n" << std::endl;
+    std::cout << "---------------------\n" << std::endl; 
 
     std::cout << "Calling Numeric<int>::apply() using a lambda (adds 5) and Numeric<int> as return type:" << std::endl;
     std::cout << "it3 before: " << it3 << std::endl;
@@ -505,15 +508,16 @@ void part7()
             *value +=5;
             return it3;
         } );
+
+        std::cout << "it3 after: " << it3 << std::endl;
+        std::cout << "Calling Numeric<int>::apply() twice using a free function (adds 7) and void as return type:" <<   std::endl;
+        std::cout << "it3 before: " << it3 << std::endl;
+        it3.apply(myNumericFreeFunct<Type>).apply(myNumericFreeFunct<Type>);
     }
-    std::cout << "it3 after: " << it3 << std::endl;
-    std::cout << "Calling Numeric<int>::apply() twice using a free function (adds 7) and void as return type:" << std::endl;
-    std::cout << "it3 before: " << it3 << std::endl;
-    it3.apply(myNumericFreeFunct).apply(myNumericFreeFunct);
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;    
 }
-*/
+
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
@@ -681,12 +685,11 @@ int main()
     std::cout << "New value of ft = ft / 0 = " << (ft /= 0) << std::endl;
     std::cout << "New value of dt = dt / 0 = " << (dt /= 0) << std::endl;
     std::cout << "---------------------\n" << std::endl; 
-    part3(); /*
+    part3(); 
     part4();
     // part6();
     part7();
     std::cout << "good to go!\n";
 
     return 0;
-    */
 }
