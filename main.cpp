@@ -346,15 +346,15 @@ void part4()
     std::cout << "pow(dt1, ftExp) = " << dt1 << "^" << ftExp << " = " << dt1.pow( static_cast<double>(ftExp) )  << std::endl;    
     std::cout << "pow(dt1, dtExp) = " << dt1 << "^" << dtExp << " = " << dt1.pow(dtExp)  << std::endl;    
     std::cout << "---------------------\n" << std::endl;    
-    /*
+    
     // Power tests with IntType
-    std::cout << "Power tests with IntType " << std::endl;
-    std::cout << "pow(it1, intExp) = " << it1 << "^" << intExp << " = " << it1.pow(intExp)   << std::endl;
-    std::cout << "pow(it1, itExp) = " << it1 << "^" << itExp << " = " << it1.pow(itExp)  << std::endl;
-    std::cout << "pow(it1, ftExp) = " << it1 << "^" << ftExp << " = " << it1.pow( static_cast<int>(ftExp) )  << std::endl;    
-    std::cout << "pow(it1, dtExp) = " << it1 << "^" << dtExp << " = " << it1.pow( static_cast<int>(dtExp) )  << std::endl;    
-    std::cout << "===============================\n" << std::endl; 
-    */
+    // std::cout << "Power tests with IntType " << std::endl;
+    // std::cout << "pow(it1, intExp) = " << it1 << "^" << intExp << " = " << it1.pow(intExp)   << std::endl;
+    // std::cout << "pow(it1, itExp) = " << it1 << "^" << itExp << " = " << it1.pow(itExp)  << std::endl;
+    // std::cout << "pow(it1, ftExp) = " << it1 << "^" << ftExp << " = " << it1.pow( static_cast<int>(ftExp) )  << std::endl;    
+    // std::cout << "pow(it1, dtExp) = " << it1 << "^" << dtExp << " = " << it1.pow( static_cast<int>(dtExp) )  << std::endl;    
+    // std::cout << "===============================\n" << std::endl; 
+    
     // ------------------------------------------------------------
     //                          Point tests
     // ------------------------------------------------------------
