@@ -175,7 +175,7 @@ struct Numeric
     }
 
     operator NumericType() const { return *value; }
-    // operator Type&() { return value; }
+    operator NumericType&() { return *value; }
 
     template<typename OtherType>
     Numeric& operator+=(const OtherType& rhs)
@@ -195,6 +195,13 @@ struct Numeric
     Numeric& operator*=(const OtherType& rhs)
     {
         *value *= static_cast<NumericType>(rhs);
+        return *this;
+    }
+
+    template<typename OtherType>
+    Numeric& operator=(const OtherType& rhs)
+    {
+        *value = static_cast<NumericType>(rhs);
         return *this;
     }
 
@@ -566,7 +573,7 @@ int main()
     
     p.multiply(d.pow(f).pow(i));
     std::cout << "d: " << d << std::endl;
-    /*
+    
     p.toString();
     
     Numeric<float> floatNum(4.3f);
@@ -574,7 +581,7 @@ int main()
     Numeric<int> intNum2(6);
     intNum = 2 + (intNum2 - 4) + static_cast<double>(floatNum) / 2.3;
     std::cout << "intNum: " << intNum << std::endl;
-    
+    /*
     {
         using Type = decltype(f)::Type;
         f.apply([&f](std::unique_ptr<Type>&value) -> decltype(f)&
