@@ -280,6 +280,13 @@ void myNumericFreeFunct( std::unique_ptr<NumericType>& value )
     *value += static_cast<NumericType>(7.0);
 }
 
+template<typename NumericType>
+void cube( std::unique_ptr<NumericType>& value )
+{
+    auto& v = *value;
+    *value = v * v * v; 
+}
+
 
 //  Point implementations
 Point::Point(float x_, float y_) :
@@ -581,7 +588,7 @@ int main()
     Numeric<int> intNum2(6);
     intNum = 2 + (intNum2 - 4) + static_cast<double>(floatNum) / 2.3;
     std::cout << "intNum: " << intNum << std::endl;
-    /*
+    
     {
         using Type = decltype(f)::Type;
         f.apply([&f](std::unique_ptr<Type>&value) -> decltype(f)&
@@ -624,7 +631,6 @@ int main()
         std::cout << "i cubed: " << i << std::endl;
     }
 
-    */
     /*
     //testing instruction 0
     HeapA heapA; 
