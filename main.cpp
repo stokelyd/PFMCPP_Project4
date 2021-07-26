@@ -1,3 +1,11 @@
+#include <iostream>
+#include <cmath>
+#include <functional>
+#include <memory>
+#include <type_traits>
+#include <limits>
+#include <typeinfo>
+
 /*
 Prject 4: Part 8 / 9
  video: Chapter 5 Part 6 Task 
@@ -23,7 +31,7 @@ Create a branch named Part8
  1) Here is a starting point for how to implement your Temporary struct.
  */
 
-#include <typeinfo>
+
 template<typename NumericType>
 struct Temporary
 {
@@ -125,97 +133,6 @@ i cubed: 531441
 
 Use a service like https://www.diffchecker.com/diff to compare your output. 
 */
-
-#include <iostream>
-int main()
-{
-    Numeric<float> f(0.1f);
-    Numeric<int> i(3);
-    Numeric<double> d(4.2);
-    
-    f += 2.f;
-    f -= i;
-    f *= d;
-    f /= 2.f;
-    std::cout << "f: " << f << std::endl;
-    
-    d += 2.f;
-    d -= i;
-    d *= f;
-    d /= 2.f;
-    std::cout << "d: " << d << std::endl;
-    
-    i += 2.f; i -= f; i *= d; i /= 2.f;
-    std::cout << "i: "<< i << std::endl;
-    
-    Point p(f, i);
-    p.toString();
-    
-    d *= -1;
-    std::cout << "d: " << d << std::endl;
-    
-    p.multiply(d.pow(f).pow(i));
-    std::cout << "d: " << d << std::endl;
-    
-    p.toString();
-    
-    Numeric<float> floatNum(4.3f);
-    Numeric<int> intNum(2);
-    Numeric<int> intNum2(6);
-    intNum = 2 + (intNum2 - 4) + static_cast<double>(floatNum) / 2.3;
-    std::cout << "intNum: " << intNum << std::endl;
-    
-    {
-        using Type = decltype(f)::Type;
-        f.apply([&f](std::unique_ptr<Type>&value) -> decltype(f)&
-                {
-                    auto& v = *value;
-                    v = v * v;
-                    return f;
-                });
-        std::cout << "f squared: " << f << std::endl;
-        
-        f.apply( cube<Type> );
-        std::cout << "f cubed: " << f << std::endl;
-    }
-    
-    {
-        using Type = decltype(d)::Type;
-        d.apply([&d](std::unique_ptr<Type>&value) -> decltype(d)&
-                {
-                    auto& v = *value;
-                    v = v * v;
-                    return d;
-                });
-        std::cout << "d squared: " << d << std::endl;
-        
-        d.apply( cube<Type> );
-        std::cout << "d cubed: " << d << std::endl;
-    }
-    
-    {
-        using Type = decltype(i)::Type;
-        i.apply([&i](std::unique_ptr<Type>&value) -> decltype(i)&
-                {
-                    auto& v = *value;
-                    v = v * v;
-                    return i;
-                });
-        std::cout << "i squared: " << i << std::endl;
-        
-        i.apply( cube<Type> );
-        std::cout << "i cubed: " << i << std::endl;
-    }
-}
-
-
-
-#include <iostream>
-#include <cmath>
-#include <functional>
-#include <memory>
-#include <type_traits>
-#include <limits>
 
 
 /*
@@ -417,7 +334,6 @@ Point& Point::multiply(float m)
 
 /*
  Part 3
-*/
 void part3()
 {
     Numeric ft( 5.5f );
@@ -534,6 +450,7 @@ void part4()
     p3.toString();   
     std::cout << "---------------------\n" << std::endl;
 }
+*/
 /*
 void part6()
 {
@@ -584,7 +501,7 @@ void part6()
     std::cout << "---------------------\n" << std::endl;    
 }
 */
-
+/*
 void part7()
 {
     Numeric ft3(3.0f);
@@ -648,7 +565,7 @@ void part7()
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;    
 }
-
+*/
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
@@ -665,6 +582,85 @@ void part7()
 
 int main()
 {   
+    Numeric<float> f(0.1f);
+    Numeric<int> i(3);
+    Numeric<double> d(4.2);
+    
+    f += 2.f;
+    f -= i;
+    f *= d;
+    f /= 2.f;
+    std::cout << "f: " << f << std::endl;
+    
+    d += 2.f;
+    d -= i;
+    d *= f;
+    d /= 2.f;
+    std::cout << "d: " << d << std::endl;
+    
+    i += 2.f; i -= f; i *= d; i /= 2.f;
+    std::cout << "i: "<< i << std::endl;
+    
+    Point p(f, i);
+    p.toString();
+    
+    d *= -1;
+    std::cout << "d: " << d << std::endl;
+    
+    p.multiply(d.pow(f).pow(i));
+    std::cout << "d: " << d << std::endl;
+    
+    p.toString();
+    
+    Numeric<float> floatNum(4.3f);
+    Numeric<int> intNum(2);
+    Numeric<int> intNum2(6);
+    intNum = 2 + (intNum2 - 4) + static_cast<double>(floatNum) / 2.3;
+    std::cout << "intNum: " << intNum << std::endl;
+    
+    {
+        using Type = decltype(f)::Type;
+        f.apply([&f](std::unique_ptr<Type>&value) -> decltype(f)&
+                {
+                    auto& v = *value;
+                    v = v * v;
+                    return f;
+                });
+        std::cout << "f squared: " << f << std::endl;
+        
+        f.apply( cube<Type> );
+        std::cout << "f cubed: " << f << std::endl;
+    }
+    
+    {
+        using Type = decltype(d)::Type;
+        d.apply([&d](std::unique_ptr<Type>&value) -> decltype(d)&
+                {
+                    auto& v = *value;
+                    v = v * v;
+                    return d;
+                });
+        std::cout << "d squared: " << d << std::endl;
+        
+        d.apply( cube<Type> );
+        std::cout << "d cubed: " << d << std::endl;
+    }
+    
+    {
+        using Type = decltype(i)::Type;
+        i.apply([&i](std::unique_ptr<Type>&value) -> decltype(i)&
+                {
+                    auto& v = *value;
+                    v = v * v;
+                    return i;
+                });
+        std::cout << "i squared: " << i << std::endl;
+        
+        i.apply( cube<Type> );
+        std::cout << "i cubed: " << i << std::endl;
+    }
+
+    /*
     //testing instruction 0
     HeapA heapA; 
 
@@ -741,4 +737,5 @@ int main()
     std::cout << "good to go!\n";
 
     return 0;
+    */
 }
