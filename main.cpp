@@ -414,7 +414,7 @@ void part6()
             *floatValue += 7.f;
             return ft3;
         } );
-    std::cout << "ft3 after: " << ft3 << std::endl;
+    std::cout << "ft3 after: " << ft3 << std::endl; 
     std::cout << "Calling FloatType::apply() using a free function (adds 7.0f) and void as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
     ft3.apply(myFloatFreeFunct);
@@ -611,7 +611,7 @@ int main()
         i.apply( cube<Type> );
         std::cout << "i cubed: " << i << std::endl;
     }
-
+    /*
     std::cout << "---------------------\n"; 
     std::cout<< "ORIGINAL MAIN:\n";
     std::cout << "---------------------\n"; 
@@ -690,6 +690,6 @@ int main()
     // part6();
     part7();
     std::cout << "good to go!\n";
-
+    */
     return 0;
 }
