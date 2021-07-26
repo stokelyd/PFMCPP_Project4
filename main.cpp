@@ -280,14 +280,14 @@ void cube( std::unique_ptr<NumericType>& value )
 }
 
 
-/*
- Part 3
+
+//  Part 3
 void part3()
 {
-    Numeric ft( 5.5f );
-    Numeric dt( 11.1 );
-    Numeric it ( 34 );
-    Numeric pi( 3.14 );
+    Numeric<float> ft( 5.5f );
+    Numeric<double> dt( 11.1 );
+    Numeric<int> it ( 34 );
+    Numeric<double> pi( 3.14 );
 
     ft *= ft;
     ft *= ft;
@@ -314,7 +314,7 @@ void part3()
     it *= 24;
     std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it << std::endl;
 }
-
+/*
 void part4()
 {
     // ------------------------------------------------------------
@@ -680,8 +680,8 @@ int main()
     std::cout << "New value of it = it / 0 = " << (it /= 0) << std::endl;
     std::cout << "New value of ft = ft / 0 = " << (ft /= 0) << std::endl;
     std::cout << "New value of dt = dt / 0 = " << (dt /= 0) << std::endl;
-    std::cout << "---------------------\n" << std::endl; /*
-    part3();
+    std::cout << "---------------------\n" << std::endl; 
+    part3(); /*
     part4();
     // part6();
     part7();
