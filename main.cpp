@@ -216,7 +216,7 @@ struct Numeric
     template<typename OtherType>
     Numeric& pow(const OtherType& exp) 
     { 
-        *value = static_cast<NumericType>( std::pow( *value, static_cast<NumericType>(exp) ) );
+        *value = static_cast<NumericType>( std::pow( static_cast<NumericType>(*value), static_cast<NumericType>(exp) ) );
         return *this;
     }
 
@@ -348,12 +348,12 @@ void part4()
     std::cout << "---------------------\n" << std::endl;    
     
     // Power tests with IntType
-    // std::cout << "Power tests with IntType " << std::endl;
-    // std::cout << "pow(it1, intExp) = " << it1 << "^" << intExp << " = " << it1.pow(intExp)   << std::endl;
-    // std::cout << "pow(it1, itExp) = " << it1 << "^" << itExp << " = " << it1.pow(itExp)  << std::endl;
-    // std::cout << "pow(it1, ftExp) = " << it1 << "^" << ftExp << " = " << it1.pow( static_cast<int>(ftExp) )  << std::endl;    
-    // std::cout << "pow(it1, dtExp) = " << it1 << "^" << dtExp << " = " << it1.pow( static_cast<int>(dtExp) )  << std::endl;    
-    // std::cout << "===============================\n" << std::endl; 
+    std::cout << "Power tests with IntType " << std::endl;
+    std::cout << "pow(it1, intExp) = " << it1 << "^" << intExp << " = " << it1.pow(intExp)   << std::endl;
+    std::cout << "pow(it1, itExp) = " << it1 << "^" << itExp << " = " << it1.pow(itExp)  << std::endl;
+    std::cout << "pow(it1, ftExp) = " << it1 << "^" << ftExp << " = " << it1.pow( static_cast<int>(ftExp) )  << std::endl;    
+    std::cout << "pow(it1, dtExp) = " << it1 << "^" << dtExp << " = " << it1.pow( static_cast<int>(dtExp) )  << std::endl;    
+    std::cout << "===============================\n" << std::endl; 
     
     // ------------------------------------------------------------
     //                          Point tests
