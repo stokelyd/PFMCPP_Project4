@@ -275,20 +275,13 @@ struct Numeric
                     return *this;
                 }
             }
-            else if (std::abs(rhs) < std::numeric_limits<DivideByType>::epsilon() )
+            else if (std::abs(rhs) <= std::numeric_limits<DivideByType>::epsilon() )
             {
                 std::cout << "can't divide integers by zero!\n";
                 return *this;
             }
         }
-        else if constexpr (std::is_same<int, DivideByType>::value)
-        {
-            if (rhs == 0)
-            {
-                std::cout << "warning: floating point division by zero!\n";
-            }
-        }
-        else if (std::abs(rhs) < std::numeric_limits<DivideByType>::epsilon() )
+        else if (std::abs(rhs) <= std::numeric_limits<DivideByType>::epsilon() )
         {
             std::cout << "warning: floating point division by zero!\n";
         }
