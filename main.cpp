@@ -143,29 +143,9 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 template<typename NumericType>
 struct Numeric
 {
-    // using Type = NumericType;
     using Type = Temporary<NumericType>;
 
     Numeric(Type _value) : value( std::make_unique<Type>(_value) ) { }
-    
-    // Numeric& apply( std::function<Numeric&( std::unique_ptr<Type>& )> func )
-    // {
-    //     if( func )
-    //     {
-    //         return func(value);
-    //     } 
-    //     return *this;
-    // }
-
-    // using NumericFunctionPointer = void(*)(std::unique_ptr<Type>&);
-    // Numeric& apply( NumericFunctionPointer functionPtr )
-    // {
-    //     if( functionPtr )
-    //     {
-    //         functionPtr(value);
-    //     }
-    //     return *this;
-    // } 
     
     template<typename Callable>
     Numeric& apply(Callable&& func)
@@ -236,7 +216,7 @@ struct Numeric
     template<typename OtherType>
     Numeric& pow(const OtherType& exp) 
     { 
-        *value = std::pow( *value, static_cast<NumericType>(exp) );
+        *value = static_cast<NumericType>( std::pow( *value, static_cast<NumericType>(exp) ) );
         return *this;
     }
 
@@ -247,11 +227,23 @@ private:
 
 struct Point
 {
-    Point(float x_, float y_);
+    Point(float x_, float y_) : 
+        x(x_), y(y_)
+    {
+    }
 
-    void toString();
+    void toString()
+    { 
+        std::cout << "Point { x: " << x << ", y: " << y << " }\n"; 
+    }
 
-    Point& multiply(float m);
+    template<typename T>
+    Point& multiply(const T& m)
+    {
+        x *= static_cast<float>(m);
+        y *= static_cast<float>(m);
+        return *this;
+    }
 private:
     float x{0}, y{0};
 };
@@ -287,21 +279,6 @@ void cube( std::unique_ptr<NumericType>& value )
     *value = v * v * v; 
 }
 
-
-//  Point implementations
-Point::Point(float x_, float y_) :
-    x(x_), y(y_)
-{
-}
-
-void Point::toString() { std::cout << "Point { x: " << x << ", y: " << y << " }\n"; }
-
-Point& Point::multiply(float m)
-{
-    x *= m;
-    y *= m;
-    return *this;
-}
 
 /*
  Part 3
