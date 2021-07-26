@@ -222,19 +222,19 @@ struct Numeric
             std::cout << "warning: floating point division by zero!\n";
         }
 
-        *value /= rhs;
+        *value /= static_cast<NumericType>(rhs);
         return *this;
     }
 
-    // Numeric& pow(Type exp) { return powInternal(exp); }
+    template<typename OtherType>
+    Numeric& pow(const OtherType& exp) 
+    { 
+        *value = std::pow( *value, static_cast<NumericType>(exp) );
+        return *this;
+    }
 
 private:
     std::unique_ptr<Type> value;
-    // Numeric& powInternal(Type exp)
-    // {
-    //     *value = static_cast<Type>( std::pow( *value, exp ) );
-    //     return *this;
-    // }
 };
 
 
@@ -563,10 +563,10 @@ int main()
     
     d *= -1;
     std::cout << "d: " << d << std::endl;
-    /*
+    
     p.multiply(d.pow(f).pow(i));
     std::cout << "d: " << d << std::endl;
-    
+    /*
     p.toString();
     
     Numeric<float> floatNum(4.3f);
