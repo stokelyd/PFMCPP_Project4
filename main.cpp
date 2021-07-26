@@ -188,7 +188,7 @@ struct Numeric
     template<typename DivideByType>
     Numeric& operator/=(const DivideByType& rhs)
     {
-        if constexpr (std::is_same<int, Type>::value)
+        if constexpr (std::is_same<int, NumericType>::value)
         {
             if constexpr (std::is_same<int, DivideByType>::value)
             {
@@ -608,14 +608,17 @@ int main()
         std::cout << "i cubed: " << i << std::endl;
     }
 
-    /*
+    std::cout << "---------------------\n"; 
+    std::cout<< "ORIGINAL MAIN:\n";
+    std::cout << "---------------------\n"; 
+    
     //testing instruction 0
     HeapA heapA; 
 
     //assign heap primitives
-    Numeric ft ( 2.0f );
-    Numeric dt ( 2. );
-    Numeric it ( 2 ) ;
+    Numeric<float> ft ( 2.0f );
+    Numeric<double> dt ( 2. );
+    Numeric<int> it ( 2 ) ;
 
     ft += 2.0f;
     std::cout << "FloatType add result=" << ft << std::endl;
@@ -677,7 +680,7 @@ int main()
     std::cout << "New value of it = it / 0 = " << (it /= 0) << std::endl;
     std::cout << "New value of ft = ft / 0 = " << (ft /= 0) << std::endl;
     std::cout << "New value of dt = dt / 0 = " << (dt /= 0) << std::endl;
-    std::cout << "---------------------\n" << std::endl; 
+    std::cout << "---------------------\n" << std::endl; /*
     part3();
     part4();
     // part6();
