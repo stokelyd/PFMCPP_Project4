@@ -281,6 +281,13 @@ struct Numeric
                 return *this;
             }
         }
+        else if constexpr (std::is_same<int, DivideByType>::value)
+        {
+            if (rhs == 0)
+            {
+                std::cout << "warning: floating point division by zero!\n";
+            }
+        }
         else if (std::abs(rhs) < std::numeric_limits<DivideByType>::epsilon() )
         {
             std::cout << "warning: floating point division by zero!\n";
@@ -613,7 +620,7 @@ void part7()
         dt3.apply( [&dt3](std::unique_ptr<Type>& value) -> decltype(dt3)&
         {
             *value += 6.0;
-            std::cout << "explicit lambda result: " << dt3 << std::endl;
+            // std::cout << "explicit lambda result: " << dt3 << std::endl;
             return dt3;
         } ); // This calls the templated apply fcn
     }
