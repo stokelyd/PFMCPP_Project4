@@ -275,13 +275,13 @@ struct Numeric
                     return *this;
                 }
             }
-            else if (rhs < std::numeric_limits<DivideByType>::epsilon() )
+            else if (std::abs(rhs) < std::numeric_limits<DivideByType>::epsilon() )
             {
                 std::cout << "can't divide integers by zero!\n";
                 return *this;
             }
         }
-        else if (rhs < std::numeric_limits<Type>::epsilon() )
+        else if (std::abs(rhs) < std::numeric_limits<DivideByType>::epsilon() )
         {
             std::cout << "warning: floating point division by zero!\n";
         }
@@ -422,7 +422,7 @@ void part3()
 
     ft *= ft;
     ft *= ft;
-    ft /= it;
+    ft /= static_cast<int>(it);
     std::cout << "The result of FloatType^4 divided by IntType is: " << ft << std::endl;
     dt *= 3;
     dt += it;
