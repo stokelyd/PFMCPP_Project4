@@ -109,6 +109,7 @@ struct Numeric
     using Type = Temporary<NumericType>;
 
     Numeric(NumericType _value) : value( std::make_unique<Type>(_value) ) { }
+    // Numeric(Type _value) : value( std::make_unique<Type>(_value) ) { } // previous constructor
     
     template<typename Callable>
     Numeric& apply(Callable&& func)
