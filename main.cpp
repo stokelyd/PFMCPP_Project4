@@ -3,11 +3,6 @@
 #include <cmath>
 #include "LeakedObjectDetector.h"
 
-#include <functional>
-#include <type_traits>
-#include <limits>
-#include <typeinfo>
-
 /*
 Project 4: Part 9 / 9
  video: Chapter 5 Part 8
@@ -82,23 +77,8 @@ struct Temporary
                   << counter++ << std::endl;
     }
 
-    ~Temporary() = default;
-
-    // copy constructor
-    // Temporary( const Temporary& other ) : v(other.v) { }
-
-    // // assignment operator
-    // Temporary& operator=( const Temporary& other )
-    // {
-    //     v = other.v;
-    //     return *this;
-    // }
-
     // move constructor
-    Temporary( Temporary&& other ) : v( std::move(other.v) )
-    {
-        // v = std::move( other.v );
-    }
+    Temporary( Temporary&& other ) : v( std::move(other.v) ) { }
 
     // move assignment
     Temporary& operator=( Temporary&& other )
@@ -110,10 +90,11 @@ struct Temporary
     operator NumericType() const { return v; } /* read-only function */
     operator NumericType&() { return v;  } /* read/write function */
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 private:
     static int counter;
     NumericType v;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 };
 
 template<typename T>
@@ -127,10 +108,7 @@ struct Numeric
 {
     using Type = Temporary<NumericType>;
 
-    // Numeric(Type _value) : value( std::make_unique<Type>(_value) ) { }
     Numeric(NumericType _value) : value( std::make_unique<Type>(_value) ) { }
-
-    ~Numeric() = default;
     
     template<typename Callable>
     Numeric& apply(Callable&& func)
@@ -142,16 +120,8 @@ struct Numeric
     operator NumericType() const { return *value; }
     operator NumericType&() { return *value; }
 
-    // Numeric (const Numeric& other)
-    // {
-    //     *value = other.value;
-    // }
-
     // move constructor
-    Numeric( Numeric&& other) : value( std::move(other.value) )
-    {
-        // value = std::move( other.value );
-    }
+    Numeric( Numeric&& other) : value( std::move(other.value) ) { }
 
     // move assignment
     Numeric& operator=( Numeric&& other )
@@ -221,12 +191,11 @@ struct Numeric
     { 
         *value = static_cast<NumericType>( std::pow( static_cast<NumericType>(*value), static_cast<NumericType>(exp) ) );
         return *this;
-    }
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
-    
+    }    
 private:
     std::unique_ptr<Type> value;    
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
 
