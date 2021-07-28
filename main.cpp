@@ -1,3 +1,13 @@
+#include <iostream>
+#include <memory>
+#include <cmath>
+#include "LeakedObjectDetector.h"
+
+// #include <functional>
+// #include <type_traits>
+// #include <limits>
+// #include <typeinfo>
+
 /*
 Project 4: Part 9 / 9
  video: Chapter 5 Part 8
@@ -12,14 +22,6 @@ Create a branch named Part9
  
  2) move these macros after the JUCE_LEAK_DETECTOR macro :
  */
-
-#define JUCE_DECLARE_NON_COPYABLE(className) \
-            className (const className&) = delete;\
-            className& operator= (const className&) = delete;
-
-#define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
-            JUCE_DECLARE_NON_COPYABLE(className) \
-            JUCE_LEAK_DETECTOR(className)
 
 /*
  3) add JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary) to the end of the  Temporary<> struct
@@ -85,6 +87,8 @@ struct Temporary
 private:
     static int counter;
     NumericType v;
+public:
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 };
 
 template<typename T>
@@ -175,6 +179,9 @@ struct Numeric
 
 private:
     std::unique_ptr<Type> value;
+
+public:
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
 
